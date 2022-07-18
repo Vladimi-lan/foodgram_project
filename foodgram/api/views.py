@@ -1,22 +1,22 @@
-from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Favorites, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from users.models import CustomUser, Follow
-
-from api.pagination import LimitPageNumberPagination
 
 from .filters import IngredientSearchFilter, RecipeFilters
 from .permissions import IsOwnerOrReadOnly
-from .serializers import (FavoriteSerializer, FollowSerializer,
-                          IngredientSerializer, RecipeSerializer,
-                          RecipeSerializerPost, ShoppingCartSerializer,
-                          TagSerializer)
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          RecipeSerializer, RecipeSerializerPost,
+                          ShoppingCartSerializer, TagSerializer,
+                          UserFollowSerializer)
+from .utils import get_wishlist
+
+from api.pagination import LimitPageNumberPagination
+from recipes.models import (Favorites, Ingredient, Recipe,
+                            ShoppingCart, Tag)
+from users.models import CustomUser, Follow
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
@@ -47,8 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeSerializer
-        else:
-            return RecipeSerializerPost
+        return RecipeSerializerPost
 
 
 class BaseFavoriteCartViewSet(viewsets.ModelViewSet):
@@ -92,36 +91,14 @@ class DownloadShoppingCartViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=('get',), url_path='download_shopping_cart')
     def download_shopping_cart(self, request):
-        shopping_list = {}
-        ingredients = IngredientRecipe.objects.filter(
-            recipe__shopping_cart__user=request.user).values(
-                'ingredient__name',
-                'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
-        print(ingredients)
-        for ingredient in ingredients:
-            amount = ingredient['amount']
-            name = ingredient['ingredient__name']
-            print(amount, name)
-            measurement_unit = ingredient['ingredient__measurement_unit']
-            if name not in shopping_list:
-                shopping_list[name] = {
-                    'measurement_unit': measurement_unit,
-                    'amount': amount
-                }
-            else:
-                shopping_list[name]['amount'] += ingredient.amount__sum
-        wishlist = ([f'{item} - {value["amount"]} '
-                     f'{value["measurement_unit"]} \n'
-                     for item, value in shopping_list.items()])
-        print(wishlist)
+        wishlist = get_wishlist(request.user)
         response = HttpResponse(wishlist, 'Content-Type: text/plain')
         response['Content-Disposition'] = 'attachment; filename="shoplist.txt"'
         return response
 
 
 class FollowViewSet(viewsets.ModelViewSet):
-    serializer_class = FollowSerializer
+    serializer_class = UserFollowSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = LimitPageNumberPagination
 
@@ -131,12 +108,20 @@ class FollowViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user_id = self.kwargs.get('user_id')
         author = get_object_or_404(CustomUser, id=user_id)
-        if int(user_id) == self.request.user.id:
-            message = {'errors': 'Нельзя подписаться на себя'}
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            'user': request.user.id,
+            'author': user_id
+        }
+        serializer = UserFollowSerializer(data=data,
+                                          context={'request': request})
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
         Follow.objects.get_or_create(
             user=request.user, author=author)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, *args, **kwargs):
         author_id = self.kwargs.get('user_id')

@@ -1,14 +1,11 @@
 from djoser.views import UserViewSet
 
-from users.models import CustomUser
 from api.serializers import CustomUserSerializer
-
 from api.pagination import LimitPageNumberPagination
+from users.models import CustomUser
 
 
 class CustomUserViewSet(UserViewSet):
+    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     pagination_class = LimitPageNumberPagination
-
-    def get_queryset(self):
-        return CustomUser.objects.all()

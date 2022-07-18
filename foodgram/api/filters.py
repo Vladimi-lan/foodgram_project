@@ -1,6 +1,6 @@
 from django_filters import rest_framework as django_filter
-from recipes.models import Recipe
 from rest_framework import filters
+from recipes.models import Recipe
 from users.models import CustomUser
 
 

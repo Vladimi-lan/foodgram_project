@@ -1,12 +1,11 @@
 from django.conf.urls import include
-from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from users.views import CustomUserViewSet
 
 from .views import (DownloadShoppingCartViewSet, FavoriteViewSet,
                     FollowViewSet, IngredientViewSet, RecipeViewSet,
                     ShoppingCartViewSet, TagViewSet)
+from users.views import CustomUserViewSet
 
 app_name = 'api'
 
@@ -18,7 +17,6 @@ router.register('tags', TagViewSet, basename='tags')
 router.register('recipes', RecipeViewSet, basename='recipes')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('recipes/download_shopping_cart/',
          DownloadShoppingCartViewSet.as_view(
           {'get': 'download_shopping_cart'}), name='download'),
