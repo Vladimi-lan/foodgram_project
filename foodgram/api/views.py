@@ -9,7 +9,6 @@ from api.pagination import LimitPageNumberPagination
 from recipes.models import (Favorites, Ingredient, Recipe,
                             ShoppingCart, Tag)
 from users.models import CustomUser, Follow
-
 from .filters import IngredientSearchFilter, RecipeFilters
 from .permissions import IsOwnerOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
