@@ -7,6 +7,7 @@ from users.models import CustomUser, Follow
 
 class IngredientRecipeInline(admin.TabularInline):
     model = IngredientRecipe
+    min_num = 1
     extra = 0
 
 

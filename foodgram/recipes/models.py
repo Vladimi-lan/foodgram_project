@@ -149,7 +149,7 @@ class IngredientRecipe(models.Model):
         verbose_name='количество',
         validators=[
             MinValueValidator(
-                0,
+                0.00001,
                 message="Убедитесь, что количество больше 0."
             ),
         ]

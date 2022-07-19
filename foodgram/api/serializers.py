@@ -1,6 +1,7 @@
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+
 from recipes.models import (Favorites, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag, TagRecipe)
 from users.models import CustomUser, Follow
@@ -117,9 +118,9 @@ class RecipeSerializerPost(serializers.ModelSerializer, CommonRecipe):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time')
 
-    def validate_ingredients(self, value):
+    def validate(self, data):
         ingredients_list = []
-        ingredients = value
+        ingredients = data['ingredient_recipes']
         for ingredient in ingredients:
             if ingredient['amount'] < 1:
                 raise serializers.ValidationError('Количество должно быть'
@@ -133,7 +134,7 @@ class RecipeSerializerPost(serializers.ModelSerializer, CommonRecipe):
                 raise serializers.ValidationError('Эти продукты уже были'
                                                   'в рецепте!')
             ingredients_list.append(ingredient_to_check)
-        return value
+        return data
 
     def add_tags_ingredients(self, tags, ingredients, recipe):
         recipe.tags.set(tags)
@@ -214,13 +215,11 @@ class UserFollowSerializer(serializers.ModelSerializer):
         ).exists()
         if is_following:
             raise serializers.ValidationError(
-                {'errors': 'Вы уже подписаны.'}
-            )
+                'Вы уже подписаны.')
         if (data['user'] == data['author']
                 and self.context['request'].method == 'POST'):
             raise serializers.ValidationError(
-                {'errors': 'Нельзя подписаться на самого себя'}
-            )
+                'Нельзя подписаться на самого себя')
         return data
 
     def to_representation(self, instance):

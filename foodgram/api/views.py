@@ -5,6 +5,11 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from api.pagination import LimitPageNumberPagination
+from recipes.models import (Favorites, Ingredient, Recipe,
+                            ShoppingCart, Tag)
+from users.models import CustomUser, Follow
+
 from .filters import IngredientSearchFilter, RecipeFilters
 from .permissions import IsOwnerOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
@@ -12,11 +17,6 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
                           ShoppingCartSerializer, TagSerializer,
                           UserFollowSerializer)
 from .utils import get_wishlist
-
-from api.pagination import LimitPageNumberPagination
-from recipes.models import (Favorites, Ingredient, Recipe,
-                            ShoppingCart, Tag)
-from users.models import CustomUser, Follow
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
