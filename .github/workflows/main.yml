@@ -23,7 +23,7 @@ jobs:
         python -m pip install --upgrade pip 
         pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
         pip install -r foodgram/requirements.txt
-        flake8 --extend-ignore=E501,I001 foodgram/recipes/migrations foodgram/users/migrations
+        flake8 --extend-ignore=E501,I001 ./foodgram/recipes/migrations ./foodgram/users/migrations
 
     - name: Test with flake8 and django tests
       run: |
