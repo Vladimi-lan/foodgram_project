@@ -26,6 +26,7 @@ jobs:
 
     - name: Test with flake8 and django tests
       run: |
+        flake8 --extend-ignore=E501 foodgram/recipes/migrations foodgram/users/migrations
         python -m flake8
 
   build_and_push_to_docker_hub:
