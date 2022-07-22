@@ -1,8 +1,8 @@
 from django.contrib import admin
-
 from users.models import CustomUser, Follow
-from .models import (Favorites, Ingredient, IngredientRecipe,
-                     Recipe, ShoppingCart, Tag, TagRecipe)
+
+from .models import (Favorites, Ingredient, IngredientRecipe, Recipe,
+                     ShoppingCart, Tag, TagRecipe)
 
 
 class IngredientRecipeInline(admin.TabularInline):
@@ -34,9 +34,9 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = (IngredientRecipeInline, TagRecipeInline,)
     list_display = ('name', 'author', 'cooking_time',
                     'id', 'count_favorite', 'pub_date')
-    search_fields = ('author__username', 'name',  'tags__slug')
+    search_fields = ('author__username', 'name', 'tags__slug')
     empty_value_display = '-пусто-'
-    list_filter = ('author', 'name',  'tags')
+    list_filter = ('author', 'name', 'tags')
 
     def count_favorite(self, obj):
         return Favorites.objects.filter(recipe=obj).count()

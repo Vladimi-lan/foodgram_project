@@ -66,7 +66,7 @@ class CommonRecipe(metaclass=serializers.SerializerMetaclass):
         if request is None or not request.user.is_authenticated:
             return False
         return ShoppingCart.objects.filter(
-                            user=request.user, recipe=obj).exists()
+            user=request.user, recipe=obj).exists()
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
@@ -230,7 +230,7 @@ class UserFollowSerializer(serializers.ModelSerializer):
         return FollowRepresentSerializer(
             obj,
             context={'request': request}
-            ).data
+        ).data
 
 
 class FollowRepresentSerializer(serializers.ModelSerializer,
@@ -247,7 +247,7 @@ class FollowRepresentSerializer(serializers.ModelSerializer,
         if request.GET.get('recipes_limit'):
             recipes_limit = int(request.GET.get('recipes_limit'))
             queryset = Recipe.objects.filter(
-                        author__id=obj.id).order_by('id')[:recipes_limit]
+                author__id=obj.id).order_by('id')[:recipes_limit]
         else:
             queryset = Recipe.objects.filter(author__id=obj.id).order_by('id')
         return ShortRecipeSerializer(queryset, many=True).data

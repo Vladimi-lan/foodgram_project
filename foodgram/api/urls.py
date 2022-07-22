@@ -18,8 +18,8 @@ router.register('recipes', RecipeViewSet, basename='recipes')
 
 urlpatterns = [
     path('recipes/download_shopping_cart/',
-         DownloadShoppingCartViewSet.as_view(
-          {'get': 'download_shopping_cart'}), name='download'),
+         DownloadShoppingCartViewSet.as_view({'get': 'download_shopping_cart'}
+                                             ), name='download'),
     path('users/subscriptions/',
          FollowViewSet.as_view({'get': 'list'}), name='subscriptions'),
     path('users/<user_id>/subscribe/',
@@ -30,8 +30,9 @@ urlpatterns = [
          FavoriteViewSet.as_view({'post': 'create',
                                   'delete': 'delete'}, name='favorite')),
     path('recipes/<recipe_id>/shopping_cart/',
-         ShoppingCartViewSet.as_view(
-          {'post': 'create', 'delete': 'delete'}, name='shoppingcart')),
+         ShoppingCartViewSet.as_view({'post': 'create',
+                                      'delete': 'delete'},
+                                     name='shoppingcart')),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
 ]

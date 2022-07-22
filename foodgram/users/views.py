@@ -1,7 +1,6 @@
-from djoser.views import UserViewSet
-
-from api.serializers import CustomUserSerializer
 from api.pagination import LimitPageNumberPagination
+from api.serializers import CustomUserSerializer
+from djoser.views import UserViewSet
 from users.models import CustomUser
 
 
