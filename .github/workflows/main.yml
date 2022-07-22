@@ -51,10 +51,11 @@ jobs:
           context: foodgram/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram:v1.0.2022
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
