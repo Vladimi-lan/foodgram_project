@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 services:
   db:
     image: postgres:13.0-alpine
@@ -12,7 +12,7 @@ services:
     volumes:
       - ../frontend/:/app/result_build/
   web:
-    image: vladimirdevpy/foodgram:v1.0.2022
+    image: vladimirdevpy/foodgram:latest
     restart: always
     volumes:
       - static_value:/app/foodgram_static/
