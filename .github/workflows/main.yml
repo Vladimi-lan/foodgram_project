@@ -65,12 +65,12 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          sudo docker pull vladimirdevpy/foodgram:v1.0.2022
-          sudo docker-compose stop
-          sudo docker-compose rm web
-          sudo docker-compose up -d
-          sudo docker-compose exec -T web python manage.py migrate
-          sudo docker-compose exec -T web python manage.py collectstatic --no-input
-          sudo docker-compose exec -T web python manage.py loaddata dump.json
-          sudo docker system prune -af
-          sudo docker volume prune -f
+          docker pull vladimirdevpy/foodgram:v1.0.2022
+          docker compose stop
+          docker compose rm web
+          docker compose up -d
+          docker-compose exec -T web python manage.py migrate
+          docker-compose exec -T web python manage.py collectstatic --no-input
+          docker-compose exec -T web python manage.py loaddata dump.json
+          # docker system prune -af
+          # docker volume prune -f
