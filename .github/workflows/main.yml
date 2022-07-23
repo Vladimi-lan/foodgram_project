@@ -66,9 +66,9 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           docker pull vladimirdevpy/foodgram:v1.0.2022
-          docker compose stop
-          docker compose rm web
-          docker compose up -d
+          docker-compose stop
+          docker-compose rm web
+          docker-compose up -d
           docker-compose exec -T web python manage.py migrate
           docker-compose exec -T web python manage.py collectstatic --no-input
           docker-compose exec -T web python manage.py loaddata dump.json
