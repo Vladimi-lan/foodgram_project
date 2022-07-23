@@ -72,6 +72,6 @@ jobs:
           sudo docker compose up -d
           sudo docker compose exec -T web python manage.py migrate
           sudo docker compose exec -T web python manage.py collectstatic --no-input
-          sudo docker compose exec -T web python manage.py loaddata dump.json
-          # docker system prune -af
-          # docker volume prune -f
+          # sudo docker compose exec -T web python manage.py loaddata dump.json
+          docker system prune -af
+          docker volume prune -f
