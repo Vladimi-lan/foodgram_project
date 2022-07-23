@@ -64,6 +64,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
+        stack_file_name: docker-compose.yml
         script: |
           docker pull vladimirdevpy/foodgram:v1.0.2022
           docker-compose stop
