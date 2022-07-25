@@ -12,8 +12,8 @@ class RecipeFilters(django_filters.FilterSet):
     author = django_filters.ModelChoiceFilter(
         queryset=CustomUser.objects.all())
     tags = django_filters.AllValuesMultipleFilter(field_name='tags__slug')
-    is_favorited = django_filters.BooleanFilter(method='get_is_favorited')
-    is_in_shopping_cart = django_filters.BooleanFilter(
+    is_favorited = django_filters.NumberFilter(method='get_is_favorited')
+    is_in_shopping_cart = django_filters.NumberFilter(
         method='get_is_in_shopping_cart')
 
     class Meta:
