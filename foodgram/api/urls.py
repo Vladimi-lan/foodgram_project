@@ -26,7 +26,7 @@ urlpatterns = [
          FollowViewSet.as_view({'post': 'create',
                                 'delete': 'delete'}), name='subscribe'),
     path('', include(router.urls)),
-    path('recipes/<recipe_id>/favorites/',
+    path('recipes/<recipe_id>/favorite/',
          FavoriteViewSet.as_view({'post': 'create',
                                   'delete': 'delete'}, name='favorite')),
     path('recipes/<recipe_id>/shopping_cart/',
