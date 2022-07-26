@@ -1,14 +1,14 @@
-from api.pagination import LimitPageNumberPagination
 from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import Favorites, Ingredient, Recipe, ShoppingCart, Tag
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from users.models import CustomUser, Follow
 
+from recipes.models import Favorites, Ingredient, Recipe, ShoppingCart, Tag
+from users.models import CustomUser, Follow
 from .filters import IngredientSearchFilter, RecipeFilters
+from .pagination import LimitPageNumberPagination
 from .permissions import IsOwnerOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeSerializer, RecipeSerializerPost,
@@ -56,7 +56,7 @@ class BaseFavoriteCartViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=recipe_id)
         if self.model.objects.filter(user=request.user,
                                      recipe=recipe).exists():
-            message = {'errors': 'Вы уже добавили этот рецепт'}
+            message = 'Вы уже добавили этот рецепт'
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
         self.model.objects.create(
             user=request.user, recipe=recipe)
