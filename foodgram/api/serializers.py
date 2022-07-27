@@ -118,9 +118,9 @@ class RecipeSerializerPost(serializers.ModelSerializer, CommonRecipe):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time')
 
-    def validate(self, data):
+    def validate_ingredients(self, value):
         ingredients_list = []
-        ingredients = data['ingredient_recipes']
+        ingredients = value
         for ingredient in ingredients:
             if ingredient['amount'] < 1:
                 raise serializers.ValidationError('Количество должно быть'
@@ -131,10 +131,10 @@ class RecipeSerializerPost(serializers.ModelSerializer, CommonRecipe):
                 raise serializers.ValidationError('Данного продукта'
                                                   'нет в базе!')
             if ingredient_to_check in ingredients_list:
-                raise serializers.ValidationError('Эти продукты уже были'
-                                                  'в рецепте!')
+                raise serializers.ValidationError('Ингредиенты должны '
+                                                  'быть уникальными!')
             ingredients_list.append(ingredient_to_check)
-        return data
+        return value
 
     def add_tags_ingredients(self, tags, ingredients, recipe):
         recipe.tags.set(tags)
